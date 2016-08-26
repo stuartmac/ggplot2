@@ -81,6 +81,9 @@ cut_width <- function(x, width, center = NULL, boundary = NULL, closed = c("righ
   max_x <- max(x, na.rm = TRUE) + (1 - 1e-08) * width
 
   breaks <- seq(min_x, max_x, width)
+  # Prevent "invalid number of intervals" error in rare cases like
+  # `cut_width(rep(0, 10), 100, boundary = 0)`
+  if(length(breaks) == 1) breaks <- c(breaks, breaks + width)
   cut(x, breaks, include.lowest = TRUE, right = (closed == "right"))
 }
 
